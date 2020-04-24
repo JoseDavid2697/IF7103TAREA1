@@ -4,7 +4,6 @@ class TareaController
 {
     public function __construct()
     {
-        //si no existe en php se crea sola
         $this->view = new View();
     } //constructor
 
@@ -45,6 +44,8 @@ class TareaController
         //Se obtienen los datos de la base de datos
 
         $data = $tarea->obtenerDatosEstilo();
+
+        //Se asignan los valores de la base a un vector con las mismas columnas que el vector usuario
         $i = 0;
         foreach ($data as $row) {
             $vector_bd[$i]['ca'] = (int) $data[$i]['ca'];
@@ -99,7 +100,7 @@ class TareaController
 
         //Obtiene los datos de la base de datos
         $data = $tarea->obtenerDatosRecinto();
-
+        //Se asignan enteros a los valores con letras segun el mapeado
         $i = 0;
         foreach ($data as $row) {
             (strcmp($data[$i]['sexo'],"M") == 0) ?  $vector_bd[$i]['sexo'] = 1 : $vector_bd[$i]['sexo'] = 2;
@@ -166,7 +167,7 @@ class TareaController
 
         //Obtiene los datos de la base de datos
         $data = $tarea->obtenerDatosSexo();
-
+        //Se asignan enteros a los valores con letras segun el mapeado  
         $i = 0;
         foreach ($data as $row) {
             (strcmp($data[$i]['recinto'],"Turrialba") == 0) ?  $vector_bd[$i]['recinto'] = 1 : $vector_bd[$i]['recinto'] = 2;
@@ -220,7 +221,7 @@ class TareaController
 
         //Obtiene los datos de la base de datos
         $data = $tarea->obtenerDatosEstudiante();
-
+        //Se asignan enteros a los valores con letras segun el mapeado
         $i = 0;
         foreach ($data as $row) {
             (strcmp($data[$i]['recinto'],"Turrialba") == 0) ?  $vector_bd[$i]['recinto'] = 1 : $vector_bd[$i]['recinto'] = 2;
@@ -363,7 +364,7 @@ class TareaController
         //Obtiene los datos de la base de datos
         $data = $tarea->obtenerDatosProfesor();
 
-        //Se pasan las letras de la bd a entros igual que el vector usuario
+        //Se pasan las letras de la bd a enteros igual que el vector usuario
         $i = 0;
         foreach ($data as $row) {
             //A
@@ -466,6 +467,7 @@ class TareaController
             $i = $i + 1;
         }//foreach
         
+        //Obtiene los datos de la base de datos
         $resultado = $this->distancia($vector_usuario,$vector_bd);
 
         $tipo_prof = $vector_bd[$resultado[1]]['class'];
@@ -525,6 +527,7 @@ class TareaController
         //Obtiene los datos de la base de datos
         $data = $tarea->obtenerDatosRedes();
 
+        //Se asignan los valores de las letras como enteros para poder restar
         $i = 0;
         foreach ($data as $row) {
             $vector_bd[$i]['re'] = (int) $data[$i]['re'];
@@ -563,6 +566,7 @@ class TareaController
             $i = $i + 1;
         }
 
+        //Se saca las distancia de ambos vectores para mostrar el resultado
         $resultado = $this->distancia($vector_usuario,$vector_bd);
 
         $tipo_red = $vector_bd[$resultado[1]]['class'];
@@ -570,36 +574,6 @@ class TareaController
         $this->view->show("tipoRedesView.php",$tipo_red);
         
     }
-
-
-    /*public function distanciaFloat($vector_usuario, $vector_data)
-    {
-        $tam = count($vector_data);
-        $cont = 0;
-        $min = sqrt((pow(($vector_data[$cont]['sexo'] - $vector_usuario['sexo']), 2)) +
-                     (pow(($vector_data[$cont]['estilo'] - $vector_usuario['estilo']), 2)) + 
-                     (pow(($vector_data[$cont]['promedio']) - $vector_usuario['promedio'], 2)));
-
-        $cont = $cont + 1;
-
-        foreach ($vector_data as $row) {
-            $distancia[$cont] = sqrt((pow(($vector_data[$cont]['sexo'] - $vector_usuario['sexo']), 2)) + (pow(($vector_data[$cont]['estilo'] - $vector_usuario['estilo']), 2))
-                + (pow(($vector_data[$cont]['promedio']) - $vector_usuario['promedio'], 2)));
-
-            if ($distancia[$cont] < $min) {
-                $min = $distancia[$cont];
-                $index_sexo = $cont;
-            }
-            
-            $cont = $cont + 1;
-
-            if ($cont == $tam) {
-                break;
-            }
-        }
-
-        return array($min, $index_sexo);
-    }*/
 
     /*---------------------------*/   
    /* *ALGORITMO DE DISTANCIA* */
@@ -632,21 +606,27 @@ class TareaController
         $primer_sumatoria = 0;
         
         for($x=0; $x<$num_columnas;$x++){   
+            //Se hace la sumatoria de cada diferencia de columnas elevadas al cuadrado
+            //(p1-q1)^2+(p2-q2)^2
             $primer_sumatoria += pow(($vector_data[0][$columnas[($x)]] - $vector_usuario[$columnas[($x)]]),2);
         }
-
+        //Obtiene la raiz cuadrada de la sumatoria resultante de la diferencia de cada columna
+        // √(p1-q1)^2+(p2-q2)^2
         $menor = sqrt($primer_sumatoria);
-        $index_estilo = 0;
+        $index_valor = 0;
 
         //Se recorren las tuplas restantes y se aplica la formula de distancia con el vector del usuario y cada tupla
         $sumatoria = 0;
         for ($i = 1; $i <= $num_filas-1; $i++) {
 
             for($j=1; $j<=$num_columnas;$j++){   
-
+                //Se hace la sumatoria de cada diferencia de columnas elevadas al cuadrado
+                //(p1-q1)^2+(p2-q2)^2
                 $sumatoria += pow(($vector_data[$i][$columnas[$j-1]] - $vector_usuario[$columnas[$j-1]]),2);
                 
             }
+            //Obtiene la raiz cuadrada de la sumatoria resultante de la diferencia de cada columna
+            // √(p1-q1)^2+(p2-q2)^2
             $tmp = sqrt($sumatoria);
 
             $sumatoria = 0; 
@@ -656,12 +636,12 @@ class TareaController
             if($tmp < $menor){
                 
                 $menor = $tmp;
-                $index_estilo = $i;
+                $index_valor = $i;
             }
 
         }//for i
 
-        return array($menor,$index_estilo);
+        return array($menor,$index_valor);
 
     }//fin distancia
 

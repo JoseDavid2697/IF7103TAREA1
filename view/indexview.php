@@ -6,6 +6,8 @@
         Estilo de Aprendizaje
     </h2>
     <br>
+    <p>Instrucciones: Para utilizar el instrumento usted debe conceder una calificación alta a aquellas palabras que mejor caracterizan la forma en que usted aprende, y una calificación baja a las palabras que menos caracterizan su estilo de aprendizaje.</p>
+    <br>
     <form action="?controlador=Tarea&accion=obtenerDatosEstiloAprendizaje" method="post">
             <table class="table table-bordered">
             <tbody>
